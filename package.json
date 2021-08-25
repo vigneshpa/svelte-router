@@ -1,0 +1,24 @@
+{
+  "name": "svelte-router",
+  "version": "1.0.0",
+  "description": "A simple router for svelte using navaid",
+  "svelte": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "svelte",
+    "router"
+  ],
+  "files": [
+    "src"
+  ],
+  "author": "vignesh paranthaman <vignesh-p@outlook.com>",
+  "license": "GPL-3.0",
+  "peerDependencies": {
+    "svelte": "^3.42.3"
+  },
+  "dependencies": {
+    "navaid": "^1.2.0"
+  }
+}
