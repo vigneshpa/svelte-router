@@ -1,12 +1,14 @@
 import { writable } from 'svelte/store';
-import type * as s from 'svelte';
 export { default as Router } from './Router.svelte';
 import type { Router as SvelteRouter } from 'navaid';
 import type { SvelteComponent as SC } from 'svelte';
 import type { Writable } from 'svelte/store';
 export type SvelteComponent = typeof SC;
 export interface SvelteRouterRoutes {
-  [route: string]: { component: () => Promise<{ default: SvelteComponent }> | { default: SvelteComponent }; routes?: SvelteRouterRoutes };
+  [route: string]: {
+    component: () => Promise<{ default: SvelteComponent }> | { default: SvelteComponent };
+    routes?: SvelteRouterRoutes;
+  };
 }
 export interface SvelteRouterMiddleware {
   (router: SvelteRouter): Promise<any> | any;

@@ -3,7 +3,11 @@
   import navaid from 'navaid';
   import type { Router } from 'navaid';
   import { Writable, writable } from 'svelte/store';
-  import type { SvelteComponent, SvelteRouterMiddleware, SvelteRouterRoutes } from '.';
+  import type {
+    SvelteComponent,
+    SvelteRouterMiddleware,
+    SvelteRouterRoutes,
+  } from '.';
 
   // Params
 
@@ -14,17 +18,23 @@
 
   let component: SvelteComponent | undefined;
 
-  let components: Writable<SvelteComponent[]> = hasContext('svelte-navaid-components')
+  let components: Writable<SvelteComponent[]> = hasContext(
+    'svelte-navaid-components'
+  )
     ? getContext('svelte-navaid-components')
     : (null as unknown as Writable<SvelteComponent[]>);
-  let routerIndex: number = hasContext('svelte-navaid-routerIndex') ? getContext('svelte-navaid-routerIndex') : -1;
+  let routerIndex: number = hasContext('svelte-navaid-routerIndex')
+    ? getContext('svelte-navaid-routerIndex')
+    : -1;
   let index = -1;
-
+  let router: ReturnType<typeof navaid>;
   if (!components) {
-    if (window['svelte-router']?.router)
-      throw new Error('Already a router exists. Do not initilise router for multiple times unless it is for subroutes!');
-    const router = navaid(base);
-    window['svelte-router'].router = router;
+    // @ts-ignore
+    if (!router) {
+      if (!window['svelte-router']?.router)
+        window['svelte-router'].router = navaid(base);
+      router = window['svelte-router'].router;
+    }
     components = parser(tree, router); // Creating strore
     Promise.resolve(middleware(router)).then(() => router.listen());
     function parser(
@@ -43,7 +53,14 @@
             if (set) comps.set(cps);
             return cps;
           };
-          if (routes[route].routes) parser(routes[route].routes as SvelteRouterRoutes, router, pageStr, activate, comps);
+          if (routes[route].routes)
+            parser(
+              routes[route].routes as SvelteRouterRoutes,
+              router,
+              pageStr,
+              activate,
+              comps
+            );
           if (verbose) console.log('Registering route', pageStr);
           router.on(pageStr, async params => {
             window['svelte-router'].isLoading.set(true);
